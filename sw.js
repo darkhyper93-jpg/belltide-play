@@ -3,6 +3,7 @@
  * - Pages: network first (always get the newest build), cache as fallback.
  * - Hashed build assets (/assets/): cache first (their names change per build).
  * - Other same-origin files: stale-while-revalidate.
+ * - version.json: never cached (update check, src/ui/update.ts).
  */
 const CACHE = 'belltide-v1';
 
@@ -20,6 +21,8 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+  // The update check must always reach the network.
+  if (url.pathname.endsWith('/version.json')) return;
 
   if (req.mode === 'navigate') {
     event.respondWith(
