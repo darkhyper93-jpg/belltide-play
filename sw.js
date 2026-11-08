@@ -1,7 +1,8 @@
 /*
  * Belltide service worker: makes the PWA installable and playable offline.
  * - Pages: network first (always get the newest build), cache as fallback.
- * - Hashed build assets (/assets/): cache first (their names change per build).
+ * - Hashed build assets (/assets/): cache first (their names change per build);
+ *   range requests (the music's audio element) get the whole file.
  * - Other same-origin files: stale-while-revalidate.
  * - version.json: never cached (update check, src/ui/update.ts).
  */
@@ -38,10 +39,16 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (url.pathname.includes('/assets/')) {
+    // An audio element asks for byte ranges (206), which the cache cannot
+    // keep: fetch the whole file instead, so the music also plays offline.
+    // A full 200 answers a range request fine for media.
+    const whole = req.headers.has('range') ? new Request(url.href) : req;
     event.respondWith(
-      caches.match(req).then((hit) => hit || fetch(req).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((c) => c.put(req, copy));
+      caches.match(whole).then((hit) => hit || fetch(whole).then((res) => {
+        if (res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(whole, copy));
+        }
         return res;
       })),
     );
