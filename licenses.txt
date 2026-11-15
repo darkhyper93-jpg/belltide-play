@@ -158,8 +158,12 @@ OpenGameArt.org:
   - Calm water: "Sea and river wave sounds" (RandomMind)
   - Music: "Cozy Puzzle In-Game 1" (MintoDog), "Meadow Thoughts" (Ecrivain)
 
+Freesound.org:
+  - Bruna's hammer on the anvil: "04 hammering into the anvil"
+    (14F_Panska_Dittrichova_Diana, sound 420102), its first four blows
+
 Wikimedia Commons:
   - Tide-change gong: "Gong or bell vibrant (short)" (Stephan, PDSounds)
 
-Synthesised for the game (no third party): the bronze bell, Bruna's
-hammer on the anvil, and the moving water of the tide change.
+Synthesised for the game (no third party): the bronze bell and the
+moving water of the tide change.
